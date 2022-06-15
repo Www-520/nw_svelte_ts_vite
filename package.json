@@ -1,0 +1,51 @@
+{
+  "name": "nw_svelte_ts_vite",
+  "version": "1.0.0",
+  "description": "使用nw+svelte+typescript+vite实现跨平台桌面端应用",
+  "main": "index.html",
+  "node-remote": "*://localhost/*",
+  "build": {
+    "nwFlavor": "sdk",
+    "nwVersion": "0.14.7",
+    "excludes": [
+      "node_modules/**",
+      "public/**",
+      "src/**",
+      ".gitignore",
+      "index.html",
+      "pnpm-lock.yaml",
+      "README.md",
+      "tsconfig.json",
+      "vite.nw.build.ts"
+    ],
+    "strippedProperties": [
+      "scripts",
+      "devDependencies",
+      "build",
+      "node-remote",
+      "dependencies"
+    ]
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx ts-node vite.nw.build.ts --TARGET=dev",
+    "build": "npx ts-node vite.nw.build.ts",
+    "win-x86": "build --tasks win-x86 ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "1.0.0-next.49",
+    "@tsconfig/svelte": "^3.0.0",
+    "@types/node": "^17.0.43",
+    "@vitejs/plugin-legacy": "^1.8.2",
+    "nw": "0.65.1-sdk",
+    "nwjs-builder-phoenix": "^1.15.0",
+    "svelte": "^3.48.0",
+    "svelte-preprocess": "^4.10.7",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.3",
+    "vite": "^2.9.12"
+  }
+}
