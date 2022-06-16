@@ -2,10 +2,9 @@
   "name": "nw_svelte_ts_vite",
   "version": "1.0.0",
   "description": "使用nw+svelte+typescript+vite实现跨平台桌面端应用",
-  "main": "index.html",
+  "main": "http://localhost:3000",
   "node-remote": "*://localhost/*",
   "build": {
-    "nwFlavor": "sdk",
     "nwVersion": "0.14.7",
     "excludes": [
       "node_modules/**",
@@ -23,7 +22,11 @@
       "devDependencies",
       "build",
       "node-remote",
-      "dependencies"
+      "dependencies",
+      "keywords",
+      "author",
+      "license",
+      "description"
     ]
   },
   "scripts": {
@@ -40,7 +43,6 @@
     "@tsconfig/svelte": "^3.0.0",
     "@types/node": "^17.0.43",
     "@vitejs/plugin-legacy": "^1.8.2",
-    "nw": "0.65.1-sdk",
     "nwjs-builder-phoenix": "^1.15.0",
     "svelte": "^3.48.0",
     "svelte-preprocess": "^4.10.7",
