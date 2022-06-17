@@ -75,4 +75,5 @@ IS_PROD
         .then(() => build(config))
     : createServer(config)
         .then(server => server.listen(DEV_PORT))
-        .then(() => exec('run .'));
+        // .then(() => exec('run .'));
+        .then(() => exec('nw .'));
