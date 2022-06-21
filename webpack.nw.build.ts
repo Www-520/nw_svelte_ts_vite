@@ -46,17 +46,19 @@ const config: Configuration = {
     module: {
         rules: [
             {
-                test: /\.js$/,
-                use: 'swc-loader',
-            },
-            {
-                test: /\.ts$/,
+                test: /\.(j|t)s$/,
                 use: {
-                    loader: 'esbuild-loader',
+                    loader: 'swc-loader',
                     options: {
-                        loader: 'ts',
+                        env: {
+                            targets: {
+                                chrome: '50',
+                            },
+                        },
                     },
                 },
+                // Svelte hot reload code in node_modules so should compile before you can use it in a development environment because nw0.14.7 chrome version is 50
+                exclude: IS_PROD ? /node_modules/ : undefined,
             },
             {
                 test: /\.svelte$/,
@@ -69,8 +71,8 @@ const config: Configuration = {
                         emitCss: IS_PROD,
                         hotReload: !IS_PROD,
                         preprocess: preprocess({
-                            typescript({ content }) {
-                                const { code, map } = esbuild.transformSync(content, {
+                            async typescript({ content }) {
+                                const { code, map } = await esbuild.transform(content, {
                                     loader: 'ts',
                                 });
                                 return { code, map };
@@ -78,6 +80,7 @@ const config: Configuration = {
                         }),
                     },
                 },
+                exclude: /node_modules/,
             },
             {
                 // 假设修改样式相关内容遇到打包后出错的问题, 把本地缓存(增量编译)的内容删除重新打包即可
@@ -86,6 +89,7 @@ const config: Configuration = {
 					'style-loader',
                     'css-loader',
 				],
+                exclude: /node_modules/,
 			},
         ],
     },
