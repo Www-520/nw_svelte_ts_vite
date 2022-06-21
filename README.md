@@ -18,6 +18,7 @@ webpack5版
    以上只解决了编译问题 并未解决热更新问题 首次热更新时nw控制台报出"Update failed: ReferenceError: __dirname is not defined"
    偶然间将devServer.hot设置为false 热更新可用了... 猜测svelte-loader或nw(大概率是nw因为svelte-loader在web环境下是可行的)热更新处理的内部代码应该与我的配置相冲突了 导致我的配置覆盖掉了它的配置导致热更新失效
    仅分别在web环境和node-webkit环境下测试热更新 发现仅在node-webkit出现此问题
+   swc-loader缺陷 不会去做类型检查, esbuild-loader也不会去做 只会做类型擦除 因此需要在打包/提交代码之前进行类型检查
 2. webpack5配置 如果需要处理css 那么无论框架如何实现的css注入 都需要css-loader来进行处理 必须写上test: /.css$/i use: ['style-loader', 'css-loader'] style-loader是可选的(也可用换成MiniCssExtractPlugin.loader) 而预处理则根据框架不同有不同的处理方式 svelte就是在preprocess中处理 当然如果是存在预处理样式文件如.scss 那么依旧需要安装对于的预处理样式处理器进行处理
 
 faq
