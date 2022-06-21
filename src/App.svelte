@@ -1,6 +1,11 @@
 <script lang="ts">
+	import path from 'path';
+
     const name: string = 'Svelte';
     const link = 'https://svelte.dev/tutorial';
+	const { a, b } = { a: 1, b: 2 };
+	console.log(a, b);
+	console.log(path.resolve(path.resolve()));
 </script>
 
 <main>

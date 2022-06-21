@@ -46,12 +46,15 @@ const config: Configuration = {
     module: {
         rules: [
             {
+                test: /\.js$/,
+                use: 'swc-loader',
+            },
+            {
                 test: /\.ts$/,
                 use: {
                     loader: 'esbuild-loader',
                     options: {
                         loader: 'ts',
-                        target: 'chrome50',
                     },
                 },
             },
@@ -69,7 +72,6 @@ const config: Configuration = {
                             typescript({ content }) {
                                 const { code, map } = esbuild.transformSync(content, {
                                     loader: 'ts',
-                                    target: 'chrome50',
                                 });
                                 return { code, map };
                             },
@@ -78,10 +80,11 @@ const config: Configuration = {
                 },
             },
             {
+                // 假设修改样式相关内容遇到打包后出错的问题, 把本地缓存(增量编译)的内容删除重新打包即可
 				test: /\.css$/,
 				use: [
 					'style-loader',
-					'css-loader',
+                    'css-loader',
 				],
 			},
         ],
@@ -91,10 +94,12 @@ const config: Configuration = {
             template: path.resolve(__dirname, './public/index.html'),
         }),
     ],
-    cache: {
-        type: 'filesystem',
-        cacheDirectory: path.resolve(__dirname, '.cache/nw_svelte_ts_vite-1.0.0-win-x86'),
-    },
+    cache: IS_PROD
+        ? {
+            type: 'filesystem',
+            cacheDirectory: path.resolve(__dirname, '.cache'),
+        }
+        : undefined,
 };
 
 // 应该动态生成一致的名称, 自定义命名, 同时读取package.json的此配置来读取要操作的文件夹
@@ -105,17 +110,21 @@ const newField = '"main":"index.html"';
 
 if (IS_PROD) {
     console.time('build');
+    console.time('nw-build');
     promisify(exec)(`build --tasks ${PLATFORM} .`)
+        .then(() => console.timeEnd('nw-build'))
         .then(() => fs.writeFileSync(file, fs.readFileSync(file).toString('utf-8').replace(oldField, newField)))
+        .then(() => console.time('webpack-build'))
         .then(() => webpack(config, (error, stats) => {
-            console.log(error, stats);
+            console.timeEnd('webpack-build');
             console.timeEnd('build');
+            // console.log(error, stats);
         }));
 } else {
     const compiler = webpack(config);
     const server = new WebpackDevServer({
         port: DEV_PORT,
-        hot: true,
+        hot: false,
     }, compiler);
     server.start().then(() => exec('run .'));
 }
